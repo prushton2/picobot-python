@@ -1,5 +1,9 @@
 from tkinter import *
 import maps
+import random
+import picobot
+
+loadedMap = None
 
 def placePixel(canvas, x, y, pixeltype):
     types = {
@@ -28,19 +32,20 @@ def loadMap(canvas, mapname):
             limity = i
             limitx = i
 
-    print("Loaded new map")
-    print(f"{limitx}; {limity}")
+    global loadedMap
+    loadedMap = mapdata
 
 
 root = Tk()
 
-root.geometry('500x500')
+root.geometry('500x700')
 root.title('Canvas Demo')
 
 canvas = Canvas(root, width=500, height=500, bg='white')
 canvas.pack(anchor=CENTER, expand=True)
 
-# loadbtn = Button(root, text="Load", command=lambda: )
+randbtn = Button(root, text="Load", command=lambda: picobot.ResetPicoBot(canvas))
+randbtn.pack()
 
 loadMap(canvas, "empty")
 
