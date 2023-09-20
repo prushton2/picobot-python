@@ -9,10 +9,9 @@ import maps
 import script
 import picobot
 
-global canvas
 canvas = None
-
-
+currentMapIndex = 0
+maplabel = None
 
 
 #This code runs the users code
@@ -25,6 +24,15 @@ def run():
         time.sleep(0.01)
 
 
+def chgMap(i):
+    global currentMapIndex
+    global maplabel
+
+    currentMapIndex += i
+    currentMapIndex %= len(maps.maps)
+    cm.loadMap(canvas, list(maps.maps)[currentMapIndex])
+
+    maplabel.config(text=list(maps.maps.keys())[currentMapIndex])
 
 
 root = Tk()
@@ -37,11 +45,18 @@ canvasFrame = Frame(root)
 cpanelFrame = Frame(root)
 navFrame = Frame(cpanelFrame)
 controlFrame = Frame(cpanelFrame)
+mapFrame = Frame(cpanelFrame)
 
 #Elements
 canvas = Canvas(canvasFrame, width=500, height=500, bg='white')
+
 resetbtn = Button(controlFrame, text="Reset Picobot", command=lambda: picobot.reset())
 runbtn = Button(controlFrame, text="Run", command=lambda: run())
+
+mapleft  = Button(mapFrame, text="<<", command=lambda: chgMap(-1))
+maplabel = Label (mapFrame, text="Empty")
+mapright = Button(mapFrame, text=">>", command=lambda: chgMap(1))
+
 N = Button(navFrame, text="N", command=lambda: picobot.move("N"))
 E = Button(navFrame, text="E", command=lambda: picobot.move("E"))
 W = Button(navFrame, text="W", command=lambda: picobot.move("W"))
@@ -63,8 +78,13 @@ E.grid(row=1,column=3)
 W.grid(row=1,column=0)
 S.grid(row=1,column=1)
 
+mapFrame.grid(row=2,column=0)
+mapleft.grid(row=0,column=0)
+maplabel.grid(row=0,column=1)
+mapright.grid(row=0,column=2)
+
 #Other functions
-cm.loadMap(canvas, "empty")
+cm.loadMap(canvas, list(maps.maps)[currentMapIndex])
 
 picobot.load(canvas)
 
