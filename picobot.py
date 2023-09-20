@@ -2,12 +2,20 @@ import canvasManager as cm
 import random
 
 picobot = [-1, -1]
+tkCanvas = None
+cstate = 0
+stateFunctions = {}
 
-def reset(canvas):
+def load(canvas):
+    global tkCanvas
+    tkCanvas = canvas
+
+def reset():
 
     global picobot
+    global tkCanvas
     if(picobot != [-1, -1]):
-        cm.placePixel(canvas, picobot[0], picobot[1], "empty")
+        cm.placePixel(tkCanvas, picobot[0], picobot[1], "empty")
     choice = None
     x = 0
     y = 0
@@ -17,10 +25,10 @@ def reset(canvas):
         choice = cm.loadedMap[y][x]
 
     picobot = [x, y]
-    cm.placePixel(canvas, x, y, "picobot")
+    cm.placePixel(tkCanvas, x, y, "picobot")
 
 
-def move(canvas, dir):
+def move(dir):
     global picobot
     newPos = []
 
@@ -36,14 +44,39 @@ def move(canvas, dir):
     if(cm.loadedMap[newPos[1]][newPos[0]] != "empty"):
         return
 
-    cm.placePixel(canvas, picobot[0], picobot[1], "passed")
+    cm.placePixel(tkCanvas, picobot[0], picobot[1], "passed")
 
     picobot = newPos
 
-    cm.placePixel(canvas, picobot[0], picobot[1], "picobot")
+    cm.placePixel(tkCanvas, picobot[0], picobot[1], "picobot")
+
+def get(sides):
+
+    sideStates = [
+        cm.loadedMap[picobot[1]-1][picobot[0]] == "block",
+        cm.loadedMap[picobot[1]][picobot[0]+1] == "block",
+        cm.loadedMap[picobot[1]][picobot[0]-1] == "block",
+        cm.loadedMap[picobot[1]+1][picobot[0]] == "block"
+    ]
 
 
-stateFunctions = {}
+    for i, e in enumerate(sides):
+        if(e == "*"):
+            continue
+
+        if(e == "x" and sideStates[i]):
+            return False
+        
+        if(e in ["N", "E", "W", "S"] and not sideStates[i]):
+            return False
+        
+    return True
+
+
+
+def setstate(newState):
+    global cstate
+    cstate = newState
 
 
 def state(state):

@@ -1,39 +1,77 @@
 from tkinter import *
-import maps
+import tkinter as tk
 import random
-import picobot
+import time
+
 import canvasManager as cm
+import maps
+
+import script
+import picobot
+
+global canvas
+canvas = None
+
+
+
+
+#This code runs the users code
+
+def run():
+    print(picobot.stateFunctions)
+    while(picobot.cstate != -1):
+        picobot.stateFunctions[picobot.cstate]()
+        canvas.update()
+        time.sleep(0.01)
+
+
 
 
 root = Tk()
 
-root.geometry('500x700')
+root.geometry('700x500')
 root.title('Canvas Demo')
+#Frames
 
-canvas = Canvas(root, width=500, height=500, bg='white')
-canvas.pack(anchor=CENTER, expand=True)
+canvasFrame = Frame(root)
+cpanelFrame = Frame(root)
+navFrame = Frame(cpanelFrame)
+controlFrame = Frame(cpanelFrame)
 
-randbtn = Button(root, text="Load", command=lambda: picobot.reset(canvas))
-randbtn.pack()
+#Elements
+canvas = Canvas(canvasFrame, width=500, height=500, bg='white')
+resetbtn = Button(controlFrame, text="Reset Picobot", command=lambda: picobot.reset())
+runbtn = Button(controlFrame, text="Run", command=lambda: run())
+N = Button(navFrame, text="N", command=lambda: picobot.move("N"))
+E = Button(navFrame, text="E", command=lambda: picobot.move("E"))
+W = Button(navFrame, text="W", command=lambda: picobot.move("W"))
+S = Button(navFrame, text="S", command=lambda: picobot.move("S"))
 
+#Grid
+canvasFrame.grid(row=0,column=0)
+canvas.grid(row=0,column=0)
 
-N = Button(root, text="N", command=lambda: picobot.move(canvas, "N"))
-E = Button(root, text="E", command=lambda: picobot.move(canvas, "E"))
-W = Button(root, text="W", command=lambda: picobot.move(canvas, "W"))
-S = Button(root, text="S", command=lambda: picobot.move(canvas, "S"))
+cpanelFrame.grid(row=0,column=1)
 
-N.pack()
-E.pack()
-W.pack()
-S.pack()
+controlFrame.grid(row=0,column=0)
+resetbtn.grid(row=0,column=0)
+runbtn.grid(row=0,column=2)
 
-cm.loadMap(canvas, "testmap")
+navFrame.grid(row=1,column=0)
+N.grid(row=0,column=1)
+E.grid(row=1,column=3)
+W.grid(row=1,column=0)
+S.grid(row=1,column=1)
 
+#Other functions
+cm.loadMap(canvas, "empty")
 
-canvas.create_rectangle((0, 0), (500, 20), fill="blue")
-canvas.create_rectangle((0, 0), (20, 500), fill="blue")
-canvas.create_rectangle((500, 500), (480, 0), fill="blue")
-canvas.create_rectangle((500, 500), (0, 480), fill="blue")
+# canvas.create_rectangle((0, 0), (500, 20), fill="blue")
+# canvas.create_rectangle((0, 0), (20, 500), fill="blue")
+# canvas.create_rectangle((500, 500), (480, 0), fill="blue")
+# canvas.create_rectangle((500, 500), (0, 480), fill="blue")
+
+picobot.load(canvas)
 
 
 root.mainloop()
