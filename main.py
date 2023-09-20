@@ -66,11 +66,6 @@ S.grid(row=1,column=1)
 #Other functions
 cm.loadMap(canvas, "empty")
 
-# canvas.create_rectangle((0, 0), (500, 20), fill="blue")
-# canvas.create_rectangle((0, 0), (20, 500), fill="blue")
-# canvas.create_rectangle((500, 500), (480, 0), fill="blue")
-# canvas.create_rectangle((500, 500), (0, 480), fill="blue")
-
 picobot.load(canvas)
 
 
